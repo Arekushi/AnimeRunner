@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"name": "AnimeRunner",
+			"path": "."
+		},
+		{
+			"name": "UE4",
+			"path": "X:\\Program Files\\Epic Games\\UE_4.27"
+		}
+	],
+	"settings": {
+		"typescript.tsc.autoDetect": "off",
+		"UEIntellisenseFixes.compiler.path": "X:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe"
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"ms-dotnettools.csharp"
+		]
+	}
+}
