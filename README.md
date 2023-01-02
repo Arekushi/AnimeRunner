@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="#" target="blank">
-    <img src="./assets/logo-01.png" width="200" alt="Nest Logo" />
+    <img src="./Assets/logo-01.png" width="200" alt="Nest Logo" />
   </a>
 </p>
 
