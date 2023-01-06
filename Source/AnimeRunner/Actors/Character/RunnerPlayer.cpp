@@ -1,17 +1,11 @@
 #include "RunnerPlayer.h"
 
-#include "AnimeRunnerGameMode.h"
-#include "HttpModule.h"
-#include "JsonObjectConverter.h"
-#include "RunnerPlayerController.h"
+#include "AnimeRunner/RunnerPlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
 
-#define PRINT_STRING(String) \
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, String);
-
+#define PRINT(String) GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, String);
 
 ARunnerPlayer::ARunnerPlayer()
 {
@@ -39,9 +33,6 @@ ARunnerPlayer::ARunnerPlayer()
 	SideViewCamera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 	SideViewCamera->bUsePawnControlRotation = false;
 	SideViewCamera->bAutoActivate = true;
-	// SideViewCamera->FieldOfView = 55.0f;
-	// SideViewCamera->ProjectionMode = ECameraProjectionMode::Orthographic;
-	// SideViewCamera->OrthoWidth = 2048.0f;
 
 	/* PostProcess */
 	FPostProcessSettings Settings = SideViewCamera->PostProcessSettings;
@@ -56,9 +47,11 @@ ARunnerPlayer::ARunnerPlayer()
 void ARunnerPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	OnDestroyed.AddDynamic(this, &ARunnerPlayer::OnDestroyPlayer);
+
 	InputEnabled = true;
 	bGoToMenu = false;
+	
+	OnDestroyed.AddDynamic(this, &ARunnerPlayer::OnDestroyPlayer);
 }
 
 void ARunnerPlayer::Tick(const float DeltaTime)
@@ -75,11 +68,6 @@ void ARunnerPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("Axis X", this, &ARunnerPlayer::MoveAxisX);
 	PlayerInputComponent->BindAxis("Axis Y", this, &ARunnerPlayer::MoveAxisY);
-}
-
-APlayerController* ARunnerPlayer::GetPlayerController() const
-{
-	return UGameplayStatics::GetPlayerController(this, 0);
 }
 
 void ARunnerPlayer::ToggleInput()
@@ -103,11 +91,11 @@ void ARunnerPlayer::TakeDamage(const int Damage)
 
 	if (HP <= 0)
 	{
-		ARunnerPlayerController* PlayerController = Cast<ARunnerPlayerController>(GetPlayerController());
+		const ARunnerPlayerController* PlayerController = Cast<ARunnerPlayerController>(GetPlayerController());
 
 		if (PlayerController)
 		{
-			PlayerController->OnDeath();
+			PlayerController->OnDeathDelegate.Broadcast();
 		}
 	}
 }
@@ -117,23 +105,5 @@ void ARunnerPlayer::OnDestroyPlayer(AActor* DestroyedActor)
 	if (!bGoToMenu)
 	{
 		TakeDamage(1);
-		PostTimer();
 	}
-}
-
-void ARunnerPlayer::PostTimer()
-{
-	FString RequestBody;
-	FPlayerData Data;
-	Data.username = FGenericPlatformProcess::UserName();
-	Data.time_reached = Cast<AAnimeRunnerGameMode>(UGameplayStatics::GetGameMode(GetWorld()))->Time;
-	FJsonObjectConverter::UStructToJsonObjectString(Data, RequestBody);
-	
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = FHttpModule::Get().CreateRequest();
-	Request->SetURL("https://anime-runners-api.herokuapp.com/api/match/register-match");
-	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
-	Request->SetHeader(TEXT("api-key"), TEXT("A8cDD9zIzhBS0tpcYyGwoa6ARXJuQU6N"));
-	Request->SetContentAsString(RequestBody);
-	Request->ProcessRequest();
 }

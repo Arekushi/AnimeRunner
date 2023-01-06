@@ -1,25 +1,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Damageable.h"
 #include "Persona.h"
+#include "AnimeRunner/Interfaces/Damageable.h"
+#include "Kismet/GameplayStatics.h"
 #include "RunnerPlayer.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
 class APlayerController;
-
-USTRUCT(BlueprintType)
-struct FPlayerData
-{
-	GENERATED_BODY()
-	
-	UPROPERTY()
-		FString username;
-
-	UPROPERTY()
-		float time_reached;
-};
 
 UCLASS()
 class ANIMERUNNER_API ARunnerPlayer : public APersona, public IDamageable
@@ -32,23 +21,26 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 private:
 	bool InputEnabled;
 
 public:
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 		UCameraComponent* SideViewCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 		USpringArmComponent* SpringArm;
 	
-	FORCEINLINE
-		UCameraComponent* GetSideViewCameraComponent() const { return SideViewCamera; }
+	FORCEINLINE UCameraComponent* GetSideViewCameraComponent() const { return SideViewCamera; }
 
-	APlayerController *GetPlayerController() const;
+	FORCEINLINE APlayerController *GetPlayerController() const
+	{
+		return UGameplayStatics::GetPlayerController(this, 0);
+	}
 	
 	void ToggleInput();
 	
@@ -56,8 +48,6 @@ public:
 
 	UFUNCTION()
 		void OnDestroyPlayer(AActor* DestroyedActor);
-
-	void PostTimer();
 
 	UPROPERTY(BlueprintReadWrite)
 		bool bGoToMenu;

@@ -43,9 +43,9 @@ For the use of the project, some prerequisites will be necessary.
 
 ## Roadmap
 - [x] Buy SSD 🙏
-- [ ] Sprites
+- [x] Sprites
     - [x] Animate Character to 3 directions (up, down, horizontal)
-    - [ ] GUI
+    - [x] GUI
 - [x] Character Logic
     - [x] Flipbook by Enum
     - [x] Camera Logic
@@ -53,10 +53,10 @@ For the use of the project, some prerequisites will be necessary.
     - [x] APEX Destruction 
         - [x] Logic to destroy the platforms
     - [x] Create Custom Levels
-- [ ] Save match time
+- [x] Save match time
     - [x] Create [Node.JS API][animerunners_api]
-    - [ ] Send POST Request to API
-    - [ ] Show the best times
+    - [x] Send POST Request to API
+    - [x] Show the best times
 - [ ] Publish in [itch.io](https://itch.io/)
 
 

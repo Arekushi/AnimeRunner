@@ -38,4 +38,10 @@ public:
 	UFUNCTION()
 		virtual void StartMultiplier();
 
+	UFUNCTION()
+		void OnWallDestroyed(AActor* DestroyedActor);
+
+	UFUNCTION(BlueprintCallable)
+		void Deactivate();
+
 };

@@ -30,8 +30,7 @@ void UTimer::SetTimer(
 	}
 	
 	FTimerHandle TimerHandle;
-	FTimerManager& TimerManager = World->GetTimerManager();
-	TimerManager.SetTimer(TimerHandle, Delegate, DelaySeconds, false, FirstDelaySeconds);
+	World->GetTimerManager().SetTimer(TimerHandle, Delegate, DelaySeconds, false, FirstDelaySeconds);
 }
 
 void UTimer::SetTimerLoop(
@@ -45,12 +44,10 @@ void UTimer::SetTimerLoop(
 		World = GEngine->GetWorldFromContextObjectChecked(this);
 	}
 	
-	FTimerManager& TimerManager = World->GetTimerManager();
-	TimerManager.SetTimer(Timer, Delegate, DelaySeconds, true, FirstDelaySeconds);
+	World->GetTimerManager().SetTimer(Timer, Delegate, DelaySeconds, true, FirstDelaySeconds);
 }
 
 void UTimer::Clear(FTimerHandle Timer)
 {
-	FTimerManager& TimerManager = World->GetTimerManager();
-	TimerManager.ClearTimer(Timer);
+	World->GetTimerManager().ClearTimer(Timer);
 }

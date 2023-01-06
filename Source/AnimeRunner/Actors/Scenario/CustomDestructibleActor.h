@@ -6,10 +6,9 @@
 #include "DestructibleMesh.h"
 #include "CustomDestructibleActor.generated.h"
 
-class UTimer;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDamaged, ACustomDestructibleActor*, Actor, FVector, HitLocation);
 
-
+class UTimer;
 class UDestructibleComponent;
 
 UCLASS()

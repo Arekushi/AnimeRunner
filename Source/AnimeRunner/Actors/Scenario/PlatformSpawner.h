@@ -13,7 +13,6 @@ class ANIMERUNNER_API APlatformSpawner : public AActor
 	
 public:
 	APlatformSpawner();
-
 	FActorSpawnParameters SpawnInfo = FActorSpawnParameters();
 
 protected:
@@ -27,10 +26,11 @@ protected:
 		TArray<TSubclassOf<APlatform>> Platforms;
 	
 	TArray<APlatform*> PreviousPlatforms;
+	int PreviousPlatformIndex;
 
 public:
 	UFUNCTION()
-		void SpawnPlatform();
+		virtual APlatform* SpawnNextPlatform();
 
 	UFUNCTION()
 		void OnOverlapBegin(
@@ -42,7 +42,7 @@ public:
 			const FHitResult& SweepResult);
 
 protected:
-	APlatform* ConstructNextPlatform();
-	FVector GetSpawnLocation();
+	virtual FVector GetNextSpawnLocation();
+	virtual int GenerateNewIndex();
 	
 };

@@ -4,7 +4,6 @@
 #include "CustomDestructibleActor.h"
 #include "DestructibleFloor.generated.h"
 
-
 UCLASS()
 class ANIMERUNNER_API ADestructibleFloor : public ACustomDestructibleActor
 {

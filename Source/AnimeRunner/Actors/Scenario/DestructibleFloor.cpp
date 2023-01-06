@@ -1,7 +1,6 @@
 #include "DestructibleFloor.h"
 
-#define PRINT_STRING(String) \
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, String);
+#define PRINT(String) GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, String);
 
 
 void ADestructibleFloor::DestroyAllObstaclesAbove(const FVector HitLocation)

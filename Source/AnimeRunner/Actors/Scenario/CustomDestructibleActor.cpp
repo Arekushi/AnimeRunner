@@ -2,11 +2,10 @@
 #include "CustomDestructibleActor.h"
 
 #include "DestructibleComponent.h"
-#include "Timer.h"
-#include "Actors/Wall.h"
+#include "Wall.h"
+#include "AnimeRunner/ActorComponents/Timer.h"
 
-#define PRINT_STRING(String) \
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, String);
+#define PRINT(String) GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, String);
 
 
 ACustomDestructibleActor::ACustomDestructibleActor()

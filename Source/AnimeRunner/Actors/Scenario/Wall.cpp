@@ -1,6 +1,6 @@
 #include "Wall.h"
 
-#include "../Timer.h"
+#include "AnimeRunner/ActorComponents/Timer.h"
 
 
 AWall::AWall()
@@ -19,6 +19,8 @@ void AWall::BeginPlay()
 {
 	Super::BeginPlay();
 	GetRootComponent()->ComponentVelocity = FVector(25, 0, 0);
+	OnDestroyed.AddDynamic(this, &AWall::OnWallDestroyed);
+	
 	StartMultiplier();
 }
 
@@ -49,4 +51,15 @@ void AWall::StartMultiplier()
 	});
 	
 	Timer->SetTimerLoop(AddTimer, AddDelegate, 1);
+}
+
+void AWall::OnWallDestroyed(AActor* DestroyedActor)
+{
+	Deactivate();
+}
+
+void AWall::Deactivate()
+{
+	Active = false;
+	Timer->Clear(AddTimer);
 }

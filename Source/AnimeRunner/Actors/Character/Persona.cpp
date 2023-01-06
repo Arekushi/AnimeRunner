@@ -1,15 +1,11 @@
 #include "Persona.h"
 
-#include "Components/CapsuleComponent.h"
 #include "PaperFlipbookComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "AnimeRunner/ActorComponents/Timer.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "ECharacterMovementStatus.h"
-#include "ECharacterAnimationDirection.h"
-#include "Timer.h"
 
-#define PRINT_STRING(String) \
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, String);
-
+#define PRINT(String) GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, String);
 
 APersona::APersona()
 {
@@ -40,6 +36,7 @@ APersona::APersona()
 	CharacterMov->MaxFlySpeed = 600.0f;
 	CharacterMov->bUseFlatBaseForFloorChecks = true;
 
+	/* Attributes */
 	MovementStatus = Stop;
 	AnimationDirection = Up;
 	CanMove = true;

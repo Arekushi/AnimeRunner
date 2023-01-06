@@ -13,7 +13,10 @@ public class AnimeRunner : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"Paper2D"
+			"Paper2D",
+			"HTTP",
+			"Json",
+			"JsonUtilities"
 		});
 
 		MinFilesUsingPrecompiledHeaderOverride = 1;

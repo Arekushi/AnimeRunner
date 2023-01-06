@@ -2,14 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "AnimeRunner/Enums/CharacterAnimationDirection.h"
+#include "AnimeRunner/Enums/CharacterMovementStatus.h"
 #include "Persona.generated.h"
-
-class UTimer;
-enum ECharacterMovementStatus;
-enum ECharacterAnimationDirection;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAnimationDirectionUpdate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMovementStatusUpdate);
+
+class UTimer;
 
 UCLASS()
 class ANIMERUNNER_API APersona : public APaperCharacter
