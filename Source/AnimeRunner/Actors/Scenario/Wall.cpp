@@ -1,6 +1,6 @@
 #include "Wall.h"
 
-#include "Timer.h"
+#include "../Timer.h"
 
 
 AWall::AWall()

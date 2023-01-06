@@ -3,7 +3,7 @@
 
 #include "DestructibleComponent.h"
 #include "Timer.h"
-#include "Wall.h"
+#include "Actors/Wall.h"
 
 #define PRINT_STRING(String) \
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, String);
@@ -25,9 +25,7 @@ ACustomDestructibleActor::ACustomDestructibleActor()
 void ACustomDestructibleActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	SetupDestructibleComponent();
-	FOnDamagedDelegate.AddDynamic(this, &ACustomDestructibleActor::OnDamaged);
 }
 
 void ACustomDestructibleActor::Tick(const float DeltaTime)
@@ -60,20 +58,10 @@ void ACustomDestructibleActor::OnOverlapBegin(
 
 		if (Wall)
 		{
-			PRINT_STRING("Colisão com Wall e o objeto quebrável!");
 			const FVector HitLocation = Wall->GetActorLocation();
 			Destruct(HitLocation);
 		}
 	}
-}
-
-void ACustomDestructibleActor::OnDamaged(
-	ACustomDestructibleActor* Actor,
-	FVector HitLocation)
-{
-	FTimerDelegate Delegate;
-	Delegate.BindUObject(this, &ACustomDestructibleActor::DisableCollision);
-	Timer->SetTimer(Delegate, 0.2f);
 }
 
 void ACustomDestructibleActor::Destruct(const FVector HitLocation)

@@ -1,9 +1,16 @@
 #include "RunnerPlayer.h"
 
+#include "AnimeRunnerGameMode.h"
+#include "HttpModule.h"
+#include "JsonObjectConverter.h"
+#include "RunnerPlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+#define PRINT_STRING(String) \
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, String);
 
 
 ARunnerPlayer::ARunnerPlayer()
@@ -49,7 +56,9 @@ ARunnerPlayer::ARunnerPlayer()
 void ARunnerPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	OnDestroyed.AddDynamic(this, &ARunnerPlayer::OnDestroyPlayer);
 	InputEnabled = true;
+	bGoToMenu = false;
 }
 
 void ARunnerPlayer::Tick(const float DeltaTime)
@@ -66,33 +75,6 @@ void ARunnerPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("Axis X", this, &ARunnerPlayer::MoveAxisX);
 	PlayerInputComponent->BindAxis("Axis Y", this, &ARunnerPlayer::MoveAxisY);
-}
-
-// void APlayer::UpdateSpriteDirection()
-// {
-// 	const FVector Velocity = GetVelocity();
-// 	const float X = Velocity.X;
-// 	const bool NeedToFlipRight = X > 0.0f && !IsFacingToRight;
-// 	const bool NeedToFlipLeft = X < 0.0f && IsFacingToRight;
-//
-// 	if (NeedToFlipRight || NeedToFlipLeft)
-// 	{
-// 		Flip();
-// 	}
-// }
-
-void ARunnerPlayer::OnOverlapBegin(
-	UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComponent,
-	int32 OtherBodyIndex,
-	bool bFromSweep,
-	const FHitResult& SweepResult)
-{
-	// if (OtherActor != nullptr)
-	// {
-	// 	CanMove = false;
-	// }
 }
 
 APlayerController* ARunnerPlayer::GetPlayerController() const
@@ -113,4 +95,45 @@ void ARunnerPlayer::ToggleInput()
 	}
 
 	InputEnabled = !InputEnabled;
+}
+
+void ARunnerPlayer::TakeDamage(const int Damage)
+{
+	HP -= Damage;
+
+	if (HP <= 0)
+	{
+		ARunnerPlayerController* PlayerController = Cast<ARunnerPlayerController>(GetPlayerController());
+
+		if (PlayerController)
+		{
+			PlayerController->OnDeath();
+		}
+	}
+}
+
+void ARunnerPlayer::OnDestroyPlayer(AActor* DestroyedActor)
+{
+	if (!bGoToMenu)
+	{
+		TakeDamage(1);
+		PostTimer();
+	}
+}
+
+void ARunnerPlayer::PostTimer()
+{
+	FString RequestBody;
+	FPlayerData Data;
+	Data.username = FGenericPlatformProcess::UserName();
+	Data.time_reached = Cast<AAnimeRunnerGameMode>(UGameplayStatics::GetGameMode(GetWorld()))->Time;
+	FJsonObjectConverter::UStructToJsonObjectString(Data, RequestBody);
+	
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = FHttpModule::Get().CreateRequest();
+	Request->SetURL("https://anime-runners-api.herokuapp.com/api/match/register-match");
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+	Request->SetHeader(TEXT("api-key"), TEXT("A8cDD9zIzhBS0tpcYyGwoa6ARXJuQU6N"));
+	Request->SetContentAsString(RequestBody);
+	Request->ProcessRequest();
 }

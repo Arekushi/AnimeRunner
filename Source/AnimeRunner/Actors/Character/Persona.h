@@ -37,6 +37,9 @@ public:
 	UPROPERTY()
 		UTimer* Timer;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int HP;
+
 	UFUNCTION(BlueprintCallable)
 		void UpdateMovementStatus(const FVector Velocity);
 
@@ -63,7 +66,6 @@ protected:
 	virtual void MoveAxisY(float Value);
 	virtual void SetAnimationDirection(TEnumAsByte<ECharacterAnimationDirection> Direction);
 	virtual void SetMovementStatus(TEnumAsByte<ECharacterMovementStatus> Status);
-	void PrintEnumerations() const;
 
 private:
 	bool IsMoving;

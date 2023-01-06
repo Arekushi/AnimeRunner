@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Damageable.h"
 #include "Persona.h"
 #include "RunnerPlayer.generated.h"
 
@@ -8,8 +9,20 @@ class UCameraComponent;
 class USpringArmComponent;
 class APlayerController;
 
+USTRUCT(BlueprintType)
+struct FPlayerData
+{
+	GENERATED_BODY()
+	
+	UPROPERTY()
+		FString username;
+
+	UPROPERTY()
+		float time_reached;
+};
+
 UCLASS()
-class ANIMERUNNER_API ARunnerPlayer : public APersona
+class ANIMERUNNER_API ARunnerPlayer : public APersona, public IDamageable
 {
 	GENERATED_BODY()
 
@@ -34,16 +47,18 @@ public:
 	
 	FORCEINLINE
 		UCameraComponent* GetSideViewCameraComponent() const { return SideViewCamera; }
-	
-	UFUNCTION()
-		void OnOverlapBegin(
-			UPrimitiveComponent* OverlappedComponent,
-			AActor* OtherActor,
-			UPrimitiveComponent* OtherComponent,
-			int32 OtherBodyIndex,
-			bool bFromSweep,
-			const FHitResult& SweepResult);
 
 	APlayerController *GetPlayerController() const;
+	
 	void ToggleInput();
+	
+	virtual void TakeDamage(int Damage) override;
+
+	UFUNCTION()
+		void OnDestroyPlayer(AActor* DestroyedActor);
+
+	void PostTimer();
+
+	UPROPERTY(BlueprintReadWrite)
+		bool bGoToMenu;
 };

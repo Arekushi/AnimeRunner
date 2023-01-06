@@ -39,6 +39,11 @@ APersona::APersona()
 	CharacterMov->MaxWalkSpeed = 600.0f;
 	CharacterMov->MaxFlySpeed = 600.0f;
 	CharacterMov->bUseFlatBaseForFloorChecks = true;
+
+	MovementStatus = Stop;
+	AnimationDirection = Up;
+	CanMove = true;
+	HP = 1;
 }
 
 void APersona::Tick(const float DeltaTime)
@@ -49,10 +54,6 @@ void APersona::Tick(const float DeltaTime)
 void APersona::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	MovementStatus = Stop;
-	AnimationDirection = Up;
-	CanMove = true;
 	OnCharacterMovementUpdated.AddDynamic(this, &APersona::Animate);
 	ChangeToIdleStateDelegate.BindUObject(this, &APersona::ChangeToIdleState);
 }
@@ -163,13 +164,4 @@ void APersona::SetMovementStatus(const TEnumAsByte<ECharacterMovementStatus> Sta
 {
 	MovementStatus = Status;
 	OnMovementStatusUpdateDelegate.Broadcast();
-}
-
-void APersona::PrintEnumerations() const
-{
-	const FString AnimationDirectionName = *UEnum::GetDisplayValueAsText(AnimationDirection).ToString();
-	const FString MovementStatusName = *UEnum::GetDisplayValueAsText(MovementStatus).ToString();
-
-	PRINT_STRING(AnimationDirectionName)
-	PRINT_STRING(MovementStatusName)
 }

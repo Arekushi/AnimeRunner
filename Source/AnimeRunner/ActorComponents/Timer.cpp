@@ -27,7 +27,6 @@ void UTimer::SetTimer(
 	if (!World)
 	{
 		World = GEngine->GetWorldFromContextObjectChecked(this);
-		// World = GetWorld();
 	}
 	
 	FTimerHandle TimerHandle;
@@ -44,7 +43,6 @@ void UTimer::SetTimerLoop(
 	if (!World)
 	{
 		World = GEngine->GetWorldFromContextObjectChecked(this);
-		// World = GetWorld();
 	}
 	
 	FTimerManager& TimerManager = World->GetTimerManager();

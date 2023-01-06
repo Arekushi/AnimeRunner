@@ -44,11 +44,6 @@ public:
 			int32 OtherBodyIndex,
 			bool bFromSweep,
 			const FHitResult& SweepResult);
-
-	UFUNCTION()
-		void OnDamaged(
-			ACustomDestructibleActor* Actor,
-			FVector HitLocation);
 	
 	UPROPERTY(EditAnywhere)
 		UDestructibleMesh* DestructibleMesh;
